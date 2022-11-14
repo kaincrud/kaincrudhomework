@@ -1,0 +1,132 @@
+puts "Let's play Tic-Tac-Toe!
+Crosses for you & zeros for computer
+"
+
+@table = [
+  ['?', '?', '?'],
+  ['?', '?', '?'],
+  ['?', '?', '?']
+]
+
+@screen = ""
+
+@cross = 'X'
+@zero = 'O'
+
+@no_winner = true
+
+def check_vacant?(row, column)
+  return @table[row][column] == '?'
+end
+
+def make_step mark, row, column
+  @table[row][column] = mark
+  @screen = "
+X/Y 1 2 3
+1   #{@table[0][0]}|#{@table[0][1]}|#{@table[0][2]}
+2   #{@table[1][0]}|#{@table[1][1]}|#{@table[1][2]}
+3   #{@table[2][0]}|#{@table[2][1]}|#{@table[2][2]}
+  "
+  print @screen
+  puts
+end
+
+
+def correct_input? row, column
+  rowOk = (0..2).include?(row)
+  columnOk = (0..2).include?(column)
+  if rowOk && columnOk
+    return check_vacant?(row, column)
+  else
+    return false
+  end
+end
+
+def user_turn
+  loop do
+    puts "Input X - row (number 1 or 2 or 3):"
+    row = (gets.to_i) -1
+    puts "Input Y - column (number 1 or 2 or 3):"
+    column = (gets.to_i) -1
+
+    if correct_input? row, column
+      puts "Your step"
+      make_step @cross, row, column
+      break
+    else
+      puts "Try another value (this is incorrect or value has already been used)"
+    end
+  end
+end
+
+
+def computer_turn
+  loop do
+    computer_row = rand(0..2)
+    computer_column = rand(0..2)
+
+    if correct_input? computer_row, computer_column
+      puts "Computer's step"
+      make_step @zero, computer_row, computer_column
+      break
+    end
+  end
+end
+
+def got_winner?
+  unused = '?'
+  symbol = @cross
+
+  corner_1 = @table[0][0]
+  corner_2 = @table[0][2]
+  corner_3 = @table[2][2]
+  corner_4 = @table[2][0]
+
+  central = @table[1][1]
+
+  middle1 = @table[0][1]
+  middle2 = @table[1][2]
+  middle3 = @table[2][1]
+  middle4 = @table[1][0]
+
+  diagonal1 = corner_1 == symbol &&	central == symbol && 	corner_3 == symbol
+  diagonal2 = corner_2 == symbol && 	central == symbol && 	corner_4 == symbol
+
+  lineV1 = corner_1 == symbol && 	middle1 == symbol &&	corner_2 == symbol
+  lineV2 = middle4 == symbol &&		central == symbol &&		middle2 == symbol
+  lineV3 = corner_4 == symbol &&		middle3 == symbol && 	corner_3 == symbol
+
+  lineH1 = corner_1 == symbol &&	middle4 == symbol &&	corner_4 == symbol
+  lineH2 = middle1 == symbol &&		central == symbol &&		middle3 == symbol
+  lineH3 = corner_2 == symbol &&	middle2 == symbol &&	corner_3 == symbol
+
+  no_moves = central == unused && corner_1 != unused && corner_2 != unused && corner_3 != unused && corner_4 != unused
+
+  if diagonal1 || diagonal2 || lineV1 || lineV2 || lineV3 || lineH1 || lineH2 || lineH3
+    if symbol == @cross
+      puts "Congratulations! You win!!!"
+
+    elsif no_moves
+      puts "Draw!"
+
+    else
+      puts "You lost!"
+    end
+
+    @no_winner = false
+  end
+end
+
+while @no_winner
+
+  user_turn
+  got_winner?
+
+  if @no_winner == false
+    break
+  end
+
+  computer_turn
+  got_winner?
+
+end
