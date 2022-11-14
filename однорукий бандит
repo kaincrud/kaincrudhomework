@@ -1,0 +1,25 @@
+hash = {111 => 10, 222 => 20, 333 => 30, 444 => 40, 555 => 50, 666 => 600, 777 => 70, 888 => 80, 999 => 90}
+
+your_balance = 1000
+
+end
+loop do
+  puts "Wanna play with me? Press Enter!"
+  gets
+
+  game = rand(100..999)
+
+    if hash[game]
+      your_balance += hash[game]
+      puts "Wow, you are lucky!"
+    elsif game == 123
+      your_balance += 1000
+      puts "We got a champion!"
+    else
+      your_balance -= 5
+      puts "Maybe next time...."
+    end
+
+  puts "Your combination is #{game}"
+  puts "Currently your balance is #{your_balance} $"
+end
